@@ -1,1 +1,154 @@
+/* style.css */
+:root{
+  --ink: #1a1410;
+  --ink-soft: #2d231c;
+  --paper-shadow: 0 18px 45px rgba(0,0,0,.45);
+  --btn-bg: rgba(26, 20, 16, 0.86);
+  --btn-border: rgba(26, 20, 16, 0.35);
+  --btn-hover: rgba(58, 44, 35, 0.88);
+  --focus: #6f5a46;
+}
 
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+
+body{
+  margin:0;
+  color:var(--ink);
+  /* Repeat plaid without scaling (no blur). */
+  background-image: url("plaid%20background.jpg");
+  background-repeat: repeat;
+  background-position: top left;
+  background-size: auto; /* keep original quality */
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+/* Center everything */
+.wrap{
+  min-height: 100vh;
+  display:grid;
+  place-items:center;
+  padding: 42px 18px;
+  position: relative;
+}
+
+/* Paper panel */
+.paper{
+  position: relative;
+  width: min(760px, 92vw);
+  aspect-ratio: 3 / 4;             /* keeps the paper “frame” vibe */
+  background-image: url("Paper%20background%20to%20have%20links%20on.jpg");
+  background-size: cover;           /* fill the panel */
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: saturate(0.95) contrast(1.02);
+  border-radius: 10px;
+  box-shadow: var(--paper-shadow);
+  padding: clamp(22px, 4.2vw, 44px);
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  gap: 18px;
+}
+
+/* Typography */
+.title{
+  margin: 0;
+  font-size: clamp(34px, 4.6vw, 54px);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--ink);
+  text-shadow: 0 1px 0 rgba(255,255,255,.28);
+}
+
+.desc{
+  margin: 6px 0 0 0;
+  max-width: 44ch;
+  font-size: clamp(14px, 1.6vw, 17px);
+  line-height: 1.45;
+  color: rgba(26,20,16,.85);
+  font-style: italic;
+}
+
+/* Buttons grid */
+.grid{
+  margin-top: 6px;
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--btn-bg);
+  color: rgba(255, 245, 235, 0.95);
+  border: 1px solid var(--btn-border);
+  font-size: 16px;
+  letter-spacing: 0.01em;
+  box-shadow:
+    0 10px 22px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.12);
+  transition: transform .12s ease, filter .12s ease, background .12s ease;
+}
+
+.btn:hover{
+  background: var(--btn-hover);
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}
+
+.btn:focus-visible{
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* Decorative PNGs (Option A) */
+.sticker{
+  position: absolute;
+  z-index: 3;
+  pointer-events: none; /* never blocks clicks */
+  user-select: none;
+  filter: drop-shadow(0 14px 22px rgba(0,0,0,.45));
+}
+
+/* Rosary: draped top-right, slight rotation */
+.rosary{
+  width: min(420px, 60vw);
+  top: 10px;
+  right: 10px;
+  transform: rotate(6deg);
+}
+
+/* Books: bottom-left, slight overlap feel */
+.books{
+  width: min(190px, 32vw);
+  left: 12px;
+  bottom: 10px;
+  transform: rotate(-4deg);
+}
+
+/* Make the paper taller/roomier on narrow screens */
+@media (max-width: 620px){
+  .paper{
+    aspect-ratio: 2 / 3;
+    padding: 22px 18px;
+  }
+  .grid{
+    grid-template-columns: 1fr;
+  }
+  .rosary{
+    width: min(360px, 78vw);
+    top: 0;
+    right: -6px;
+  }
+  .books{
+    width: min(170px, 44vw);
+    left: 8px;
+    bottom: 8px;
+  }
+}
