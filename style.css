@@ -1,18 +1,18 @@
 /* style.css */
+/* Uses your EXACT filenames from the screenshot:
+   - Plaidbackground.jpg
+   - Paperbackground.jpg
+   - rosarysticker.png
+   - Booksticker.png
+*/
 
-/* ====== THEME ====== */
 :root{
-  --ink: #1b1410;
-  --ink2:#2b211a;
-  --muted: rgba(27,20,16,.78);
-  --paperShadow: 0 22px 60px rgba(0,0,0,.55);
-  --focus: #6d563f;
-
-  /* button palette */
-  --btnBg: rgba(25,18,14,.86);
-  --btnEdge: rgba(255,245,235,.18);
-  --btnGlow: rgba(0,0,0,.35);
-  --btnHover: rgba(40,30,24,.92);
+  --ink: #1a1410;
+  --ink-soft: rgba(26,20,16,.82);
+  --btn-bg: rgba(20, 14, 11, .86);
+  --btn-hover: rgba(44, 32, 25, .92);
+  --btn-border: rgba(255, 245, 235, .16);
+  --focus: #6f5a46;
 }
 
 *{ box-sizing:border-box; }
@@ -23,241 +23,151 @@ body{
   color:var(--ink);
   font-family: Georgia, "Times New Roman", Times, serif;
 
-  /* PLAID REPEATS (no scaling = no blur) */
+  /* PLAID REPEAT (no stretching = no quality loss) */
   background-image: url("Plaidbackground.jpg");
   background-repeat: repeat;
   background-position: top left;
   background-size: auto;
-}
 
-/* ====== SCENE / LAYOUT (intentionally different from the previous one) ====== */
-.scene{
-  min-height:100vh;
-  position:relative;
+  /* center the paper */
+  min-height: 100vh;
   display:grid;
   place-items:center;
   padding: 56px 18px;
+  position: relative;
+  overflow-x: hidden;
 }
 
-/* soft vignette so the center reads better */
-.scene::before{
+/* soft vignette so the paper reads on plaid */
+body::before{
   content:"";
-  position:fixed;
-  inset:0;
+  position: fixed;
+  inset: 0;
   pointer-events:none;
-  background:
-    radial-gradient(ellipse at center,
-      rgba(0,0,0,.18) 0%,
-      rgba(0,0,0,.32) 55%,
-      rgba(0,0,0,.55) 100%);
-  mix-blend-mode:multiply;
+  background: radial-gradient(ellipse at center,
+    rgba(0,0,0,.18) 0%,
+    rgba(0,0,0,.36) 58%,
+    rgba(0,0,0,.58) 100%);
 }
 
-/* ====== PAPER PANEL ====== */
+/* PAPER PANEL (buttons and text sit on top of this image) */
 .paper{
-  position:relative;
-  width: min(640px, 92vw);
-  min-height: 640px;
+  position: relative;
+  z-index: 2;
 
-  /* Paper image behind the buttons */
+  width: min(760px, 92vw);
+  min-height: min(86vh, 860px);
+
   background-image: url("Paperbackground.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 
   border-radius: 18px;
-  box-shadow: var(--paperShadow);
-  padding: clamp(26px, 4.5vw, 48px);
-  z-index: 2;
+  box-shadow: 0 24px 70px rgba(0,0,0,.55);
+  padding: clamp(26px, 4.4vw, 54px);
 
-  /* make it feel “new” vs last: slight tilt + offset */
-  transform: rotate(-1.2deg);
+  display:flex;
+  flex-direction:column;
+  gap: 22px;
 }
 
-/* subtle “aged” overlay (no extra images) */
-.paper::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius: inherit;
-  pointer-events:none;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.08)),
-    radial-gradient(circle at 20% 15%, rgba(0,0,0,.10), transparent 55%),
-    radial-gradient(circle at 80% 75%, rgba(0,0,0,.12), transparent 60%);
-  mix-blend-mode:multiply;
-}
-
-/* ====== HEADER ====== */
-.header{
-  position:relative;
-  z-index:1;
-  text-align:left;
-  padding-right: 12px;
-}
-
-.eyebrow{
-  margin:0 0 10px 0;
-  letter-spacing: .26em;
-  font-size: 12px;
-  color: rgba(27,20,16,.70);
-}
-
+/* header */
 .title{
-  margin:0;
-  font-size: clamp(34px, 5vw, 54px);
-  color: var(--ink);
+  margin: 0;
+  font-size: clamp(34px, 5vw, 56px);
   letter-spacing: .02em;
   line-height: 1.05;
+  text-shadow: 0 1px 0 rgba(255,255,255,.25);
 }
-
 .desc{
   margin: 10px 0 0 0;
   max-width: 52ch;
-  color: var(--muted);
-  font-size: clamp(14px, 1.7vw, 17px);
-  line-height: 1.45;
+  color: var(--ink-soft);
+  font-size: clamp(14px, 1.8vw, 17px);
+  line-height: 1.5;
   font-style: italic;
 }
 
-/* divider looks like an ink line + faint stain */
-.divider{
-  height: 18px;
-  margin: 18px 0 20px;
-  position:relative;
-  z-index:1;
-}
-.divider::before{
-  content:"";
-  position:absolute;
-  left:0; right:0;
-  top: 9px;
-  height:1px;
-  background: rgba(27,20,16,.35);
-}
-.divider::after{
-  content:"";
-  position:absolute;
-  left:0; right:0;
-  top:0; bottom:0;
-  background: radial-gradient(circle at 30% 50%, rgba(27,20,16,.12), transparent 55%);
-  opacity:.75;
-}
-
-/* ====== LINKS (8 buttons) ====== */
-.links{
-  position:relative;
-  z-index:1;
+/* 8 buttons */
+.btn-grid{
+  margin-top: 10px;
   display:grid;
-  grid-template-columns: 1fr;     /* different vibe: elegant vertical list */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-  margin-top: 6px;
 }
 
-/* “metal plaque” style, dark academia */
-.link{
+.btn{
   text-decoration:none;
-  color: rgba(255,245,235,.96);
-  background: var(--btnBg);
+  color: rgba(255, 245, 235, .96);
+
+  background: var(--btn-bg);
+  border: 1px solid rgba(0,0,0,.35);
+  border-top: 1px solid var(--btn-border);
+
   border-radius: 14px;
-  padding: 14px 16px;
+  padding: 14px 14px;
 
   display:flex;
   align-items:center;
-  justify-content:space-between;
+  justify-content:center;
 
-  border: 1px solid rgba(0,0,0,.25);
   box-shadow:
-    0 12px 26px var(--btnGlow),
+    0 14px 28px rgba(0,0,0,.28),
     inset 0 1px 0 rgba(255,255,255,.10),
     inset 0 -1px 0 rgba(0,0,0,.35);
 
-  letter-spacing: .01em;
-  font-size: 16px;
   transition: transform .12s ease, background .12s ease, filter .12s ease;
 }
 
-/* little “arrow” without icons */
-.link::after{
-  content:"↗";
-  opacity:.75;
-  font-size: 14px;
-}
-
-.link:hover{
-  background: var(--btnHover);
-  transform: translateY(-2px) translateX(1px);
+.btn:hover{
+  background: var(--btn-hover);
+  transform: translateY(-2px);
   filter: brightness(1.05);
 }
 
-.link:focus-visible{
+.btn:focus-visible{
   outline: 2px solid var(--focus);
   outline-offset: 4px;
 }
 
-/* footer */
-.foot{
-  position:relative;
-  z-index:1;
-  margin-top: 18px;
-  display:flex;
-  align-items:center;
-  gap: 10px;
-  color: rgba(27,20,16,.70);
-  font-size: 12px;
-  letter-spacing: .06em;
-}
-.stamp{
-  display:inline-grid;
-  place-items:center;
-  width: 26px;
-  height: 26px;
-  border-radius: 999px;
-  background: rgba(27,20,16,.10);
-  border: 1px solid rgba(27,20,16,.18);
-}
-
-/* ====== DECORATIONS (Option A) ====== */
+/* DECOR PNGs (Option A) */
 .deco{
-  position:absolute;
-  pointer-events:none; /* never blocks clicks */
+  position: fixed;
+  pointer-events:none;
   user-select:none;
   z-index: 3;
   filter: drop-shadow(0 18px 28px rgba(0,0,0,.55));
 }
 
-/* Rosary: draped top-right, slightly over paper + outside it */
+/* rosary draped top-right */
 .rosary{
-  width: min(520px, 74vw);
-  top: 10px;
-  right: 10px;
+  width: min(540px, 78vw);
+  top: -6px;
+  right: -10px;
   transform: rotate(9deg);
 }
 
-/* Books: bottom-left, outside the paper so it feels “placed” */
+/* books bottom-left */
 .books{
-  width: min(220px, 42vw);
-  left: 18px;
-  bottom: 16px;
+  width: min(230px, 44vw);
+  left: 10px;
+  bottom: 10px;
   transform: rotate(-7deg);
 }
 
-/* ====== RESPONSIVE ====== */
-@media (max-width: 560px){
-  .paper{
-    transform: rotate(-0.6deg);
-    min-height: 610px;
-    padding: 24px 18px;
-    border-radius: 16px;
-  }
+/* mobile */
+@media (max-width: 620px){
+  .btn-grid{ grid-template-columns: 1fr; }
+  .paper{ min-height: auto; }
   .rosary{
-    width: min(460px, 92vw);
-    right: -14px;
-    top: -6px;
+    width: min(500px, 96vw);
+    right: -18px;
+    top: -10px;
   }
   .books{
-    width: min(190px, 52vw);
-    left: 10px;
-    bottom: 10px;
+    width: min(200px, 54vw);
+    left: 6px;
+    bottom: 8px;
   }
 }
