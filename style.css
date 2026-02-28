@@ -1,18 +1,13 @@
 /* style.css */
-/* Uses your EXACT filenames from the screenshot:
-   - Plaidbackground.jpg
-   - Paperbackground.jpg
-   - rosarysticker.png
-   - Booksticker.png
-*/
-
 :root{
-  --ink: #1a1410;
-  --ink-soft: rgba(26,20,16,.82);
-  --btn-bg: rgba(20, 14, 11, .86);
-  --btn-hover: rgba(44, 32, 25, .92);
-  --btn-border: rgba(255, 245, 235, .16);
-  --focus: #6f5a46;
+  --ink: #1b1410;
+  --muted: rgba(27,20,16,.78);
+  --paperShadow: 0 22px 60px rgba(0,0,0,.55);
+  --focus: #6d563f;
+
+  --btnBg: rgba(25,18,14,.86);
+  --btnGlow: rgba(0,0,0,.35);
+  --btnHover: rgba(40,30,24,.92);
 }
 
 *{ box-sizing:border-box; }
@@ -23,40 +18,41 @@ body{
   color:var(--ink);
   font-family: Georgia, "Times New Roman", Times, serif;
 
-  /* PLAID REPEAT (no stretching = no quality loss) */
+  /* plaid repeats */
   background-image: url("Plaidbackground.jpg");
   background-repeat: repeat;
   background-position: top left;
   background-size: auto;
+}
 
-  /* center the paper */
-  min-height: 100vh;
+.scene{
+  min-height:100vh;
   display:grid;
   place-items:center;
   padding: 56px 18px;
   position: relative;
-  overflow-x: hidden;
 }
 
-/* soft vignette so the paper reads on plaid */
-body::before{
+/* vignette */
+.scene::before{
   content:"";
-  position: fixed;
-  inset: 0;
+  position:fixed;
+  inset:0;
   pointer-events:none;
   background: radial-gradient(ellipse at center,
-    rgba(0,0,0,.18) 0%,
-    rgba(0,0,0,.36) 58%,
-    rgba(0,0,0,.58) 100%);
+    rgba(0,0,0,.16) 0%,
+    rgba(0,0,0,.32) 60%,
+    rgba(0,0,0,.56) 100%);
+  mix-blend-mode:multiply;
 }
 
-/* PAPER PANEL (buttons and text sit on top of this image) */
+/* paper panel */
 .paper{
-  position: relative;
+  position:relative;
   z-index: 2;
 
   width: min(760px, 92vw);
-  min-height: min(86vh, 860px);
+  min-height: min(86vh, 900px);
 
   background-image: url("Paperbackground.jpg");
   background-size: cover;
@@ -64,7 +60,7 @@ body::before{
   background-repeat: no-repeat;
 
   border-radius: 18px;
-  box-shadow: 0 24px 70px rgba(0,0,0,.55);
+  box-shadow: var(--paperShadow);
   padding: clamp(26px, 4.4vw, 54px);
 
   display:flex;
@@ -72,7 +68,10 @@ body::before{
   gap: 22px;
 }
 
-/* header */
+/* centered title + desc */
+.header{
+  text-align:center;
+}
 .title{
   margin: 0;
   font-size: clamp(34px, 5vw, 56px);
@@ -81,93 +80,80 @@ body::before{
   text-shadow: 0 1px 0 rgba(255,255,255,.25);
 }
 .desc{
-  margin: 10px 0 0 0;
+  margin: 10px auto 0 auto;
   max-width: 52ch;
-  color: var(--ink-soft);
-  font-size: clamp(14px, 1.8vw, 17px);
-  line-height: 1.5;
+  color: var(--muted);
+  font-size: clamp(14px, 1.7vw, 17px);
+  line-height: 1.45;
   font-style: italic;
 }
 
-/* 8 buttons */
-.btn-grid{
-  margin-top: 10px;
+/* buttons fill the available width */
+.links{
   display:grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 14px;
+  width: 100%;
+  margin-top: 8px;
+  flex: 1; /* take remaining space so it doesn't look cramped */
+  align-content: start;
 }
 
-.btn{
+/* make each link stretch full cell width */
+.link{
+  width: 100%;
   text-decoration:none;
-  color: rgba(255, 245, 235, .96);
-
-  background: var(--btn-bg);
-  border: 1px solid rgba(0,0,0,.35);
-  border-top: 1px solid var(--btn-border);
-
+  color: rgba(255,245,235,.96);
+  background: var(--btnBg);
   border-radius: 14px;
-  padding: 14px 14px;
+  padding: 16px 16px;
 
   display:flex;
   align-items:center;
   justify-content:center;
 
+  border: 1px solid rgba(0,0,0,.25);
   box-shadow:
-    0 14px 28px rgba(0,0,0,.28),
+    0 12px 26px var(--btnGlow),
     inset 0 1px 0 rgba(255,255,255,.10),
     inset 0 -1px 0 rgba(0,0,0,.35);
 
+  letter-spacing: .01em;
+  font-size: 16px;
   transition: transform .12s ease, background .12s ease, filter .12s ease;
 }
 
-.btn:hover{
-  background: var(--btn-hover);
+.link:hover{
+  background: var(--btnHover);
   transform: translateY(-2px);
   filter: brightness(1.05);
 }
 
-.btn:focus-visible{
+.link:focus-visible{
   outline: 2px solid var(--focus);
   outline-offset: 4px;
 }
 
-/* DECOR PNGs (Option A) */
-.deco{
-  position: fixed;
-  pointer-events:none;
-  user-select:none;
-  z-index: 3;
-  filter: drop-shadow(0 18px 28px rgba(0,0,0,.55));
+/* footer at bottom of paper */
+.footer{
+  margin-top: auto; /* pushes footer to bottom */
+  text-align:center;
+  font-size: 12px;
+  letter-spacing: .08em;
+  color: rgba(27,20,16,.75);
 }
 
-/* rosary draped top-right */
-.rosary{
-  width: min(540px, 78vw);
-  top: -6px;
-  right: -10px;
-  transform: rotate(9deg);
+.credit{
+  color: rgba(27,20,16,.92);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.credit:hover{
+  color: rgba(27,20,16,1);
 }
 
-/* books bottom-left */
-.books{
-  width: min(230px, 44vw);
-  left: 10px;
-  bottom: 10px;
-  transform: rotate(-7deg);
-}
-
-/* mobile */
+/* mobile: 1 column buttons */
 @media (max-width: 620px){
-  .btn-grid{ grid-template-columns: 1fr; }
+  .links{ grid-template-columns: 1fr; }
   .paper{ min-height: auto; }
-  .rosary{
-    width: min(500px, 96vw);
-    right: -18px;
-    top: -10px;
-  }
-  .books{
-    width: min(200px, 54vw);
-    left: 6px;
-    bottom: 8px;
-  }
 }
