@@ -1,4 +1,9 @@
 /* style.css */
+/* Uses your exact filenames:
+   - Plaidbackground.jpg
+   - Paperbackground.jpg
+*/
+
 :root{
   --ink: #1b1410;
   --muted: rgba(27,20,16,.78);
@@ -18,60 +23,60 @@ body{
   color:var(--ink);
   font-family: Georgia, "Times New Roman", Times, serif;
 
-  /* plaid repeats */
+  /* plaid repeats without scaling (no blur) */
   background-image: url("Plaidbackground.jpg");
   background-repeat: repeat;
   background-position: top left;
   background-size: auto;
-}
 
-.scene{
-  min-height:100vh;
+  min-height: 100vh;
   display:grid;
   place-items:center;
   padding: 56px 18px;
   position: relative;
+  overflow-x: hidden;
 }
 
-/* vignette */
-.scene::before{
+/* vignette to help the paper read on plaid */
+body::before{
   content:"";
-  position:fixed;
-  inset:0;
+  position: fixed;
+  inset: 0;
   pointer-events:none;
   background: radial-gradient(ellipse at center,
-    rgba(0,0,0,.16) 0%,
-    rgba(0,0,0,.32) 60%,
+    rgba(0,0,0,.14) 0%,
+    rgba(0,0,0,.30) 60%,
     rgba(0,0,0,.56) 100%);
   mix-blend-mode:multiply;
 }
 
-/* paper panel */
+/* paper panel wraps content (NO forced min-height) */
 .paper{
-  position:relative;
+  position: relative;
   z-index: 2;
 
   width: min(760px, 92vw);
-  min-height: min(86vh, 900px);
+  height: auto;                /* key fix: shrink-wrap */
+  border-radius: 18px;
 
   background-image: url("Paperbackground.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 
-  border-radius: 18px;
   box-shadow: var(--paperShadow);
   padding: clamp(26px, 4.4vw, 54px);
 
   display:flex;
   flex-direction:column;
-  gap: 22px;
+  gap: 20px;
 }
 
-/* centered title + desc */
+/* centered title + description */
 .header{
   text-align:center;
 }
+
 .title{
   margin: 0;
   font-size: clamp(34px, 5vw, 56px);
@@ -79,6 +84,7 @@ body{
   line-height: 1.05;
   text-shadow: 0 1px 0 rgba(255,255,255,.25);
 }
+
 .desc{
   margin: 10px auto 0 auto;
   max-width: 52ch;
@@ -88,23 +94,23 @@ body{
   font-style: italic;
 }
 
-/* buttons fill the available width */
+/* buttons: full width grid, with intentional spacing before footer */
 .links{
+  width: 100%;
   display:grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
-  width: 100%;
+
   margin-top: 8px;
-  flex: 1; /* take remaining space so it doesn't look cramped */
-  align-content: start;
+  margin-bottom: 28px; /* creates purposeful “closing” space */
 }
 
-/* make each link stretch full cell width */
 .link{
   width: 100%;
   text-decoration:none;
   color: rgba(255,245,235,.96);
   background: var(--btnBg);
+
   border-radius: 14px;
   padding: 16px 16px;
 
@@ -120,6 +126,7 @@ body{
 
   letter-spacing: .01em;
   font-size: 16px;
+
   transition: transform .12s ease, background .12s ease, filter .12s ease;
 }
 
@@ -134,13 +141,23 @@ body{
   outline-offset: 4px;
 }
 
-/* footer at bottom of paper */
+/* footer lifted up + divider so the bottom feels intentional */
 .footer{
-  margin-top: auto; /* pushes footer to bottom */
   text-align:center;
   font-size: 12px;
   letter-spacing: .08em;
   color: rgba(27,20,16,.75);
+
+  margin-top: 30px; /* keeps it from hugging the bottom edge */
+}
+
+.footer::before{
+  content:"";
+  display:block;
+  width: 120px;
+  height: 1px;
+  background: rgba(27,20,16,.35);
+  margin: 18px auto 14px;
 }
 
 .credit{
@@ -152,8 +169,7 @@ body{
   color: rgba(27,20,16,1);
 }
 
-/* mobile: 1 column buttons */
+/* mobile */
 @media (max-width: 620px){
   .links{ grid-template-columns: 1fr; }
-  .paper{ min-height: auto; }
 }
